@@ -2,17 +2,23 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
 use App\Models\Category;
+use Livewire\Component;
 
 class CategoryComponent extends Component
 {
-    public $categories, $name, $category_id;
+    public $categories;
+
+    public $name;
+
+    public $category_id;
+
     public $isOpen = false;
 
     public function render()
     {
         $this->categories = Category::all();
+
         return view('livewire.admin.category-component')->layout('layouts.admin');
     }
 
@@ -46,7 +52,7 @@ class CategoryComponent extends Component
 
         Category::updateOrCreate(['id' => $this->category_id], $validatedData);
 
-        session()->flash('message', 
+        session()->flash('message',
             $this->category_id ? 'Category Updated Successfully.' : 'Category Created Successfully.');
 
         $this->closeModal();

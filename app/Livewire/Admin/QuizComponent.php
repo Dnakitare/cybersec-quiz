@@ -2,18 +2,26 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
-use App\Models\Quiz;
 use App\Models\Category;
+use App\Models\Quiz;
+use Livewire\Component;
 
 class QuizComponent extends Component
 {
-    public $quizzes, $title, $category_id, $quiz_id;
+    public $quizzes;
+
+    public $title;
+
+    public $category_id;
+
+    public $quiz_id;
+
     public $isOpen = false;
 
     public function render()
     {
         $this->quizzes = Quiz::with('category')->get();
+
         return view('livewire.admin.quiz-component', [
             'categories' => Category::all(),
         ])->layout('layouts.admin');
@@ -51,7 +59,7 @@ class QuizComponent extends Component
 
         Quiz::updateOrCreate(['id' => $this->quiz_id], $validatedData);
 
-        session()->flash('message', 
+        session()->flash('message',
             $this->quiz_id ? 'Quiz Updated Successfully.' : 'Quiz Created Successfully.');
 
         $this->closeModal();

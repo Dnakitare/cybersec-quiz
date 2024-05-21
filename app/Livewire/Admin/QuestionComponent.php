@@ -2,18 +2,30 @@
 
 namespace App\Livewire\Admin;
 
-use Livewire\Component;
 use App\Models\Question;
 use App\Models\Quiz;
+use Livewire\Component;
 
 class QuestionComponent extends Component
 {
-    public $questions, $quiz_id, $text, $options, $correct_answer, $question_id;
+    public $questions;
+
+    public $quiz_id;
+
+    public $text;
+
+    public $options;
+
+    public $correct_answer;
+
+    public $question_id;
+
     public $isOpen = false;
 
     public function render()
     {
         $this->questions = Question::with('quiz')->get();
+
         return view('livewire.admin.question-component', [
             'quizzes' => Quiz::all(),
         ])->layout('layouts.admin');
@@ -55,7 +67,7 @@ class QuestionComponent extends Component
 
         Question::updateOrCreate(['id' => $this->question_id], $validatedData);
 
-        session()->flash('message', 
+        session()->flash('message',
             $this->question_id ? 'Question Updated Successfully.' : 'Question Created Successfully.');
 
         $this->closeModal();
@@ -72,7 +84,7 @@ class QuestionComponent extends Component
         $this->correct_answer = $question->correct_answer;
         $this->openModal();
     }
-    
+
     public function delete($id)
     {
         Question::findOrFail($id)->delete();

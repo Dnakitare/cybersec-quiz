@@ -2,9 +2,9 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Result;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class UserDashboardComponent extends Component
 {

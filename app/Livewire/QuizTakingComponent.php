@@ -2,14 +2,18 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Quiz;
 use App\Models\Result;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class QuizTakingComponent extends Component
 {
-    public $quiz, $questions, $answers = [];
+    public $quiz;
+
+    public $questions;
+
+    public $answers = [];
 
     public function mount($quizId)
     {
@@ -27,7 +31,8 @@ class QuizTakingComponent extends Component
             'score' => $score,
         ]);
 
-        session()->flash('message', 'Quiz submitted successfully. Your score is ' . $score . '/' . $this->questions->count());
+        session()->flash('message', 'Quiz submitted successfully. Your score is '.$score.'/'.$this->questions->count());
+
         return redirect()->route('dashboard');
     }
 
@@ -39,6 +44,7 @@ class QuizTakingComponent extends Component
                 $score++;
             }
         }
+
         return $score;
     }
 
