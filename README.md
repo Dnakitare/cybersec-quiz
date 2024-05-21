@@ -133,12 +133,12 @@ The CyberSec Quiz Platform is a web application built with Laravel and Livewire.
 ### Usage
 
 #### Admin
-	-	Access the admin dashboard at http://localhost/admin/dashboard.
-	-	Manage quizzes, questions, and categories.
+- Access the admin dashboard at http://localhost/admin/dashboard.
+- Manage quizzes, questions, and categories.
 
 #### User
-  - Register or log in to the application.
-	-	Take quizzes and view your results on the user dashboard.
+- Register or log in to the application.
+- Take quizzes and view your results on the user dashboard.
 
 ### License
 
