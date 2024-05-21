@@ -50,6 +50,6 @@ class QuizTakingComponent extends Component
 
     public function render()
     {
-        return view('livewire.quiz-taking-component');
+        return view('livewire.quiz-taking-component')->layout('layouts.app');
     }
 }
