@@ -24,11 +24,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Create 5 categories
-        Category::factory()->count(5)->create()->each(function ($category) {
+        Category::factory()->count(2)->create()->each(function ($category) {
             // Create 3 quizzes for each category
-            Quiz::factory()->count(3)->create(['category_id' => $category->id])->each(function ($quiz) {
+            Quiz::factory()->count(1)->create(['category_id' => $category->id])->each(function ($quiz) {
                 // Create 10 questions for each quiz
-                Question::factory()->count(10)->create(['quiz_id' => $quiz->id]);
+                Question::factory()->count(5)->create(['quiz_id' => $quiz->id]);
             });
         });
     }

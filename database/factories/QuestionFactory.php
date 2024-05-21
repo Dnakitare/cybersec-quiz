@@ -26,7 +26,9 @@ class QuestionFactory extends Factory
             'options' => $this->faker->randomElements([
                 'Option 1', 'Option 2', 'Option 3', 'Option 4',
             ], 4),
-            'correct_answer' => 'Option 1',
+            'correct_answer' => $this->faker->randomElement([
+                'Option 1', 'Option 2', 'Option 3', 'Option 4',
+            ], 4),
         ];
     }
 }
