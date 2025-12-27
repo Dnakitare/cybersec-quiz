@@ -13,15 +13,10 @@ class QuizFactory extends Factory
 {
     protected $model = Quiz::class;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
-            'title' => $this->faker->sentence,
+            'title' => fake()->sentence(),
             'category_id' => Category::factory(),
         ];
     }

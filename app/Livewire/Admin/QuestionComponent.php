@@ -12,8 +12,6 @@ class QuestionComponent extends Component
     use WithPagination;
     protected $paginationTheme = 'tailwind';
 
-    public $questions;
-
     public $quiz_id;
 
     public $text;
