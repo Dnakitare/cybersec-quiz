@@ -19,7 +19,7 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 // Admin Routes
-Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'verified', 'admin'])->prefix('admin')->group(function () {
     Route::get('/dashboard', DashboardComponent::class)->name('admin.dashboard');
     Route::get('/quizzes', QuizComponent::class)->name('admin.quizzes');
     Route::get('/questions', QuestionComponent::class)->name('admin.questions');
@@ -27,6 +27,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
 });
 
 // Quiz Taking Route
-Route::middleware(['auth', 'verified'])->get('/quizzes/{quizId}', QuizTakingComponent::class)->name('quizzes.take');
+Route::middleware(['auth', 'verified'])->get('/quizzes/{quiz}', QuizTakingComponent::class)->name('quizzes.take');
 
 require __DIR__.'/auth.php';

@@ -29,11 +29,13 @@ $logout = function (Logout $logout) {
                     </x-nav-link>
                 </div>
 
+                @if(auth()->user()->is_admin)
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')" wire:navigate>
                         {{ __('Admin Dashboard') }}
                     </x-nav-link>
                 </div>
+                @endif
             </div>
 
             <!-- Settings Dropdown -->
@@ -86,11 +88,13 @@ $logout = function (Logout $logout) {
             </x-responsive-nav-link>
         </div>
 
+        @if(auth()->user()->is_admin)
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')" wire:navigate>
                 {{ __('Admin Dashboard') }}
             </x-responsive-nav-link>
         </div>
+        @endif
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">

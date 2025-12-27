@@ -5,9 +5,13 @@ namespace App\Livewire\Admin;
 use App\Models\Question;
 use App\Models\Quiz;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class QuestionComponent extends Component
 {
+    use WithPagination;
+    protected $paginationTheme = 'tailwind';
+
     public $questions;
 
     public $quiz_id;
@@ -24,10 +28,11 @@ class QuestionComponent extends Component
 
     public function render()
     {
-        $this->questions = Question::with('quiz')->get();
+        $questions = Question::with('quiz')->paginate(10);
 
         return view('livewire.admin.question-component', [
             'quizzes' => Quiz::all(),
+            'questions' => $questions,
         ])->layout('layouts.admin');
     }
 
@@ -62,8 +67,17 @@ class QuestionComponent extends Component
             'quiz_id' => 'required|exists:quizzes,id',
             'text' => 'required|string|max:255',
             'options' => 'required|array|min:2',
-            'correct_answer' => 'required|string',
+            'options.*' => 'required|string|max:500',
+            'correct_answer' => 'required|string|in_array:options.*',
+        ], [
+            'correct_answer.in_array' => 'The correct answer must be one of the option keys.',
         ]);
+
+        // Ensure correct_answer is a valid option key
+        if (!array_key_exists($this->correct_answer, $this->options)) {
+            $this->addError('correct_answer', 'The correct answer must match one of the option keys (e.g., A, B, C, D).');
+            return;
+        }
 
         Question::updateOrCreate(['id' => $this->question_id], $validatedData);
 
@@ -72,6 +86,7 @@ class QuestionComponent extends Component
 
         $this->closeModal();
         $this->resetInputFields();
+        $this->resetPage();
     }
 
     public function edit($id)
@@ -89,5 +104,6 @@ class QuestionComponent extends Component
     {
         Question::findOrFail($id)->delete();
         session()->flash('message', 'Question Deleted Successfully.');
+        $this->resetPage();
     }
 }

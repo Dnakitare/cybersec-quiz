@@ -9,20 +9,26 @@ use Livewire\Component;
 
 class QuizTakingComponent extends Component
 {
-    public $quiz;
-
-    public $questions;
+    public Quiz $quiz;
 
     public $answers = [];
 
-    public function mount($quizId)
+    /**
+     * Mount the quiz and prevent duplicate submissions.
+     */
+    public function mount(Quiz $quiz)
     {
-        $this->quiz = Quiz::with('questions')->findOrFail($quizId);
-        $this->questions = $this->quiz->questions;
+        $this->quiz = $quiz->load('questions');
+        // If the user already has a result for this quiz, redirect
+        if (Result::where('user_id', Auth::id())->where('quiz_id', $this->quiz->id)->exists()) {
+            session()->flash('error', 'You have already taken this quiz.');
+            return redirect()->route('dashboard');
+        }
     }
 
     public function submitQuiz()
     {
+        $totalQuestions = $this->quiz->questions->count();
         $score = $this->calculateScore();
 
         Result::create([
@@ -31,7 +37,7 @@ class QuizTakingComponent extends Component
             'score' => $score,
         ]);
 
-        session()->flash('message', 'Quiz submitted successfully. Your score is '.$score.'/'.$this->questions->count());
+        session()->flash('message', 'Quiz submitted successfully. Your score is '.$score.'/'.$totalQuestions);
 
         return redirect()->route('dashboard');
     }
@@ -39,8 +45,8 @@ class QuizTakingComponent extends Component
     private function calculateScore()
     {
         $score = 0;
-        foreach ($this->questions as $question) {
-            if ($this->answers[$question->id] === $question->correct_answer) {
+        foreach ($this->quiz->questions as $question) {
+            if (isset($this->answers[$question->id]) && $this->answers[$question->id] === $question->correct_answer) {
                 $score++;
             }
         }
@@ -50,6 +56,16 @@ class QuizTakingComponent extends Component
 
     public function render()
     {
-        return view('livewire.quiz-taking-component')->layout('layouts.app');
+        $viewQuestions = $this->quiz->questions->map(function ($question) {
+            return [
+                'id' => $question->id,
+                'text' => $question->text,
+                'options' => $question->options,
+            ];
+        })->all();
+
+        return view('livewire.quiz-taking-component', [
+            'viewQuestions' => $viewQuestions,
+        ])->layout('layouts.app');
     }
 }

@@ -5,10 +5,13 @@ namespace App\Livewire\Admin;
 use App\Models\Category;
 use App\Models\Quiz;
 use Livewire\Component;
+use Livewire\WithPagination;
+use App\Livewire\Traits\ModalTrait;
 
 class QuizComponent extends Component
 {
-    public $quizzes;
+    use WithPagination, ModalTrait;
+    protected $paginationTheme = 'tailwind';
 
     public $title;
 
@@ -16,14 +19,12 @@ class QuizComponent extends Component
 
     public $quiz_id;
 
-    public $isOpen = false;
-
     public function render()
     {
-        $this->quizzes = Quiz::with('category')->get();
-
+        $quizzes = Quiz::with('category')->paginate(10);
         return view('livewire.admin.quiz-component', [
             'categories' => Category::all(),
+            'quizzes' => $quizzes,
         ])->layout('layouts.admin');
     }
 
@@ -31,16 +32,6 @@ class QuizComponent extends Component
     {
         $this->resetInputFields();
         $this->openModal();
-    }
-
-    public function openModal()
-    {
-        $this->isOpen = true;
-    }
-
-    public function closeModal()
-    {
-        $this->isOpen = false;
     }
 
     private function resetInputFields()
@@ -64,6 +55,7 @@ class QuizComponent extends Component
 
         $this->closeModal();
         $this->resetInputFields();
+        $this->resetPage();
     }
 
     public function edit($id)
@@ -80,5 +72,6 @@ class QuizComponent extends Component
     {
         Quiz::findOrFail($id)->delete();
         session()->flash('message', 'Quiz Deleted Successfully.');
+        $this->resetPage();
     }
 }

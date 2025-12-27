@@ -21,12 +21,19 @@ class UserDashboardComponent extends Component
 
     private function loadResults()
     {
-        $this->results = Result::where('user_id', Auth::id())->with('quiz')->get();
+        $this->results = Result::where('user_id', Auth::id())
+            ->with(['quiz' => function ($query) {
+                $query->withCount('questions');
+            }])
+            ->latest()
+            ->get();
     }
 
     private function loadCategories()
     {
-        $this->categories = Category::with('quizzes')->get();
+        $this->categories = Category::with(['quizzes' => function ($query) {
+            $query->withCount('questions');
+        }])->get();
     }
 
     public function render()
